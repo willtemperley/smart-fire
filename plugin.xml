@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+     <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.jrc.estation.handlers.ActiveFirePluginHandler"
+            description="Open the SMART fires fire thingy"
+            id="it.jrc.estation.commands.OpenEBook"
+            name="Fires">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=org.wcs.smart.intelligence.menu">
+         <command
+               commandId="it.jrc.estation.commands.OpenEBook"
+               mnemonic="O"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   
+   <!-- Register the class in hibernate -->
+   <!-- This uses the RCP plugin mechanism to advertise hibernate mappings -->
+   <extension
+         point="org.wcs.smart.hibernate.mapping">
+      <class
+            class="it.jrc.estation.domain.ActiveFire">
+      </class>
+   </extension>
+
+</plugin>

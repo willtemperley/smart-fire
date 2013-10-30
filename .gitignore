@@ -1,0 +1,7 @@
+target/*
+bin/*
+hibernate.properties
+runtime.properties
+.project
+.classpath
+.settings/*

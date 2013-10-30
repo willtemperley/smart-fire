@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Wed Oct 30 14:53:50 CET 2013:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.1 - (1458268): instance a816c00e-0142-09a4-463a-000005f9cb80 
+on database directory E:\smart_environment\smart\data\database\smartdb with class loader sun.misc.Launcher$AppClassLoader@32f4a24a 
+Loaded from file:/E:/smart_environment/smart/trunk/source/java/org.wcs.smart.hibernate.libs/lib/derby-10.10.1.1.jar
+java.vendor=Sun Microsystems Inc.
+java.runtime.version=1.6.0_17-b04
+user.dir=E:\smart_environment\smart\it.jrc.estation
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

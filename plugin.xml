@@ -1,26 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-     <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="org.jrc.estation.handlers.ActiveFirePluginHandler"
-            description="Open the SMART fires fire thingy"
-            id="it.jrc.estation.commands.OpenEBook"
-            name="Fires">
-      </command>
-   </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
+            allPopups="false"
             locationURI="menu:org.eclipse.ui.main.menu?after=org.wcs.smart.intelligence.menu">
-         <command
-               commandId="it.jrc.estation.commands.OpenEBook"
-               mnemonic="O"
-               style="push">
-         </command>
+         <menu
+               id="it.jrc.estation.menu"
+               label="Fires">
+            <command
+                  commandId="it.jrc.estation.commands.OpenFireManager"
+                  label="Open fire manager"
+                  style="push">
+            </command>
+         </menu>
       </menuContribution>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="it.jrc.estation.commands.OpenFireManager"
+            name="Open">
+      </command>
+  </extension>
+
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.jrc.estation.handlers.ActiveFirePluginHandler"
+            commandId="it.jrc.estation.commands.OpenFireManager">
+         <activeWhen>
+            <test
+                  forcePluginActivation="true"
+                  property="org.wcs.smart.caSingle">
+            </test>
+         </activeWhen>
+      </handler>
+    </extension>
+
    
    <!-- Register the class in hibernate -->
    <!-- This uses the RCP plugin mechanism to advertise hibernate mappings -->

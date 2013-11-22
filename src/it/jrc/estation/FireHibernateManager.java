@@ -7,9 +7,10 @@ import org.wcs.smart.hibernate.SmartHibernateManager;
 
 public class FireHibernateManager extends SmartHibernateManager {
 	
-
-	
 	/**
+	 * 
+	 * 
+	 * 
 	 */
 	public static boolean saveActiveFire(ActiveFire activeFire, Session session) {
 		session.beginTransaction();

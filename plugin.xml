@@ -14,6 +14,11 @@
                   label="Open fire manager"
                   style="push">
             </command>
+            <command
+                  commandId="it.jrc.estation.ShowFirePerspective"
+                  label="Open fire perspective"
+                  style="push">
+            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -24,7 +29,38 @@
             id="it.jrc.estation.commands.OpenFireManager"
             name="Open">
       </command>
+      <command
+            id="it.jrc.estation.ShowFirePerspective"
+            name="Open perspective">
+      </command>
   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="it.jrc.estation.ShowFirePerspective"
+            icon="images/etool16/delete.png">
+      </image>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="it.jrc.estation.FirePerspective"
+            icon="images/etool16/delete.png"
+            id="it.jrc.estation.FirePerspective"
+            name="%perspective.name">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="it.jrc.estation.FireListView"
+            icon="images/etool16/delete.png"
+            id="it.jrc.estation.FireListView"
+            name="%view.name"
+            restorable="true">
+      </view>
+   </extension>
 
    <extension
          point="org.eclipse.ui.handlers">
@@ -38,16 +74,23 @@
             </test>
          </activeWhen>
       </handler>
+      <handler
+            class="org.jrc.estation.handlers.OpenFirePerspectiveHandler"
+            commandId="it.jrc.estation.ShowFirePerspective">
+         <activeWhen>
+            <test
+                  forcePluginActivation="true"
+                  property="org.wcs.smart.caSingle">
+            </test>
+         </activeWhen>
+      </handler>
     </extension>
 
-   
+  
    <!-- Register the class in hibernate -->
    <!-- This uses the RCP plugin mechanism to advertise hibernate mappings -->
-   <extension
-         point="org.wcs.smart.hibernate.mapping">
-      <class
-            class="it.jrc.estation.domain.ActiveFire">
-      </class>
+   <extension point="org.wcs.smart.hibernate.mapping">
+      <class class="org.wcs.smart.fire.model.ActiveFire"/>
    </extension>
 
 </plugin>

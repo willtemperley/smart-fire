@@ -1,4 +1,4 @@
-package it.jrc.estation.domain;
+package org.wcs.smart.fire.model;
 
 import java.sql.Timestamp;
 import java.util.Date;

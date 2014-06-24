@@ -1,6 +1,5 @@
 package it.jrc.estation;
 
-import it.jrc.estation.domain.ActiveFire;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,9 +17,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.wcs.smart.fire.model.ActiveFire;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -57,16 +59,43 @@ public class FireDAO {
 	
 		return x;
 	}
+	
+	public static String getFireCountByDate(double minx, double miny, double maxx, double maxy, Date fromDate, Date toDate) {
+		String url;
+		
+		
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	
+		url = String
+				.format("http://dopa-services.jrc.ec.europa.eu/services/estation/get_fire_count_by_date?minx=%s&miny=%s&maxx=%s&maxy=%s&fromdate=%s&todate=%s&srid=%s",
+						minx, miny, maxx, maxy, df.format(fromDate), df.format(toDate), 4326);
+		
+		String readJson = readJsonFromUrl(url);
+		
+	    JsonParser parser = new JsonParser();
+	    JsonObject obj = (JsonObject)parser.parse(readJson);
+	    JsonArray arr = obj.get("records").getAsJsonArray();
+	    
+	    JsonObject x = (JsonObject) arr.get(0);
+	    JsonObject y = (JsonObject) arr.get(1);
+	    String fireCount = x.get("count").getAsString();
+	    String dateCount = y.get("count").getAsString();
+			
+		return fireCount + " fires over " + dateCount + " days between " + df.format(fromDate) + " and " + df.format(toDate);
+	
+	}
 
 	public static void main(String[] args) {
 
 		Date fromDate = new Date();
 		Date toDate = new Date();
 
-		getDatesBetweenTheseDates(fromDate, toDate);
+//		getDatesBetweenTheseDates(fromDate, toDate);
 		
-		getFiresByDate(-123.65205256969075,48.31421421030944,-123.24327664326452, 48.75880075305904, new Date(), new Date());
+//		getFiresByDate(-123.65205256969075,48.31421421030944,-123.24327664326452, 48.75880075305904, new Date(), new Date());
+		String x = getFireCountByDate(-123.65205256969075,48.31421421030944,-123.24327664326452, 48.75880075305904, new Date(), new Date());
 
+		System.out.println(x);
 	}
 
 	public static List<Date> getDatesBetweenTheseDates(Date fromDate, Date toDate) {

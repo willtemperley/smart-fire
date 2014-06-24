@@ -1,7 +1,6 @@
 package org.jrc.estation.handlers;
 
 import it.jrc.estation.FireDAO;
-import it.jrc.estation.domain.ActiveFire;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,6 +13,7 @@ import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -27,6 +27,7 @@ import org.hibernate.Session;
 import org.wcs.smart.ca.Area;
 import org.wcs.smart.ca.ConservationArea;
 import org.wcs.smart.ca.Area.AreaType;
+import org.wcs.smart.fire.model.ActiveFire;
 import org.wcs.smart.hibernate.SmartDB;
 import org.wcs.smart.hibernate.SmartHibernateManager;
 import org.wcs.smart.intelligence.model.Intelligence;
@@ -40,24 +41,24 @@ public class FireUpdateDialog extends TrayDialog {
 
 	private static final String SELECTION_DIALOG = "Fire data manager";
 
+	Session session = SmartHibernateManager.openSession();
+
 	public FireUpdateDialog(Shell parentShell) {
 		super(parentShell);
-		
+
 	}
-	
+
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		//no-op
+		// no-op
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 
-		
 		Label fromDateLabel = new Label(container, SWT.NONE);
 		fromDateLabel.setText("From date:");
-
 
 		final DateTime fromDatePicker = new DateTime(container, SWT.BORDER
 				| SWT.DATE | SWT.DROP_DOWN);
@@ -66,7 +67,6 @@ public class FireUpdateDialog extends TrayDialog {
 		gridData.verticalAlignment = SWT.TOP;
 		gridData.grabExcessHorizontalSpace = true;
 		fromDatePicker.setLayoutData(gridData);
-		
 
 		Label toDateLabel = new Label(container, SWT.NONE);
 		toDateLabel.setText("To date:");
@@ -82,32 +82,49 @@ public class FireUpdateDialog extends TrayDialog {
 		gridData.grabExcessHorizontalSpace = true;
 		toDatePicker.setLayoutData(gridData);
 
-		
 		final Label status = new Label(container, SWT.NONE);
-						
-		
-		Button button = new Button(container, SWT.PUSH);
-	    button.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 1, 1));
+		gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.verticalAlignment = SWT.TOP;
+		gridData.grabExcessHorizontalSpace = true;
+		status.setLayoutData(gridData);
 
+		Button button = new Button(container, SWT.PUSH);
+		button.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 1,
+				1));
+
+		// Listener
+//		fromDatePicker.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				Date fromDate = getDateFromDateTime(fromDatePicker);
+//				Date toDate = getDateFromDateTime(toDatePicker);
+//
+//				setFireCountMessage(status, fromDate, toDate);
+//			}
+//
+//		});
+//
+//		toDatePicker.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				Date fromDate = getDateFromDateTime(fromDatePicker);
+//				Date toDate = getDateFromDateTime(toDatePicker);
+//
+//				setFireCountMessage(status, fromDate, toDate);
+//			}
+//
+//		});
 
 		button.setText("Get fires");
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				Session session = SmartHibernateManager.openSession();
-
 				// Get CA and area
 				ConservationArea ca = SmartDB.getCurrentConservationArea();
-				Query q = session
-						.createQuery("from Area where type = :areaType and conservationArea.uuid = :caUuid");
-				q.setParameter("areaType", AreaType.BA);
-				q.setParameter("caUuid", ca.getUuid());
-				
-				System.out.println("Clicked");
+				List<Area> areas = getAreaList(ca);
 
-				@SuppressWarnings("unchecked")
-				List<Area> areas = q.list();
 				for (Area area : areas) {
 
 					System.out.println("area" + area.getUuid());
@@ -122,14 +139,16 @@ public class FireUpdateDialog extends TrayDialog {
 					List<Date> dateList;
 
 					if (fromDate.after(toDate)) {
-					    dateList = FireDAO.getDatesBetweenTheseDates(toDate, fromDate);
+						dateList = FireDAO.getDatesBetweenTheseDates(toDate,
+								fromDate);
 					} else {
-						dateList = FireDAO.getDatesBetweenTheseDates(fromDate, toDate);
+						dateList = FireDAO.getDatesBetweenTheseDates(fromDate,
+								toDate);
 					}
 
-
 					/*
-					 * Making lots of web service calls just for simplified programming.
+					 * Making lots of web service calls just for simplified
+					 * programming.
 					 */
 					int fireCount = 0;
 					int dateCount = 0;
@@ -137,16 +156,22 @@ public class FireUpdateDialog extends TrayDialog {
 					for (Date date : dateList) {
 						System.out.println(date);
 
-						Collection<ActiveFire> someFires = FireDAO.getFiresByDate(x.getMinX(), x.getMinY(), x.getMaxX(), x.getMaxY(), date, date);
-						
-						if(!someFires.isEmpty()) {
+						Collection<ActiveFire> someFires = FireDAO
+								.getFiresByDate(x.getMinX(), x.getMinY(),
+										x.getMaxX(), x.getMaxY(), date, date);
+
+						if (!someFires.isEmpty()) {
 							fireCount += someFires.size();
 							saveFires(session, ca, someFires, date, date);
 							dateCount++;
 						}
-						
-						status.setText("Imported " + fireCount + " fires over " + dateCount + " days in which fires occurred.");
-						//Todo: check dates
+
+						status.setText("Imported "
+								+ fireCount
+								+ " fires over "
+								+ dateCount
+								+ " days in which fires occurred.");
+						// Todo: check dates
 
 					}
 				}
@@ -171,15 +196,10 @@ public class FireUpdateDialog extends TrayDialog {
 
 		Intelligence intelligence = new Intelligence();
 
-		Date now = new Date();
-
 		intelligence.setReceivedDate(fromDate);
 
 		intelligence.setFromDate(fromDate);
 		intelligence.setToDate(toDate);
-
-//		IntelligenceSource source = new IntelligenceSource();
-//		intelligence.setSource(source);
 
 		intelligence.setDescription("Fire");
 		intelligence.setName("Fire");
@@ -215,6 +235,38 @@ public class FireUpdateDialog extends TrayDialog {
 	@Override
 	protected Point getInitialSize() {
 		return new Point(450, 300);
+	}
+
+	private List<Area> getAreaList(ConservationArea ca) {
+		Query q = session
+				.createQuery("from Area where type = :areaType and conservationArea.uuid = :caUuid");
+		q.setParameter("areaType", AreaType.BA);
+		q.setParameter("caUuid", ca.getUuid());
+
+		System.out.println("Clicked");
+
+		@SuppressWarnings("unchecked")
+		List<Area> areas = q.list();
+		return areas;
+	}
+
+	private void setFireCountMessage(final Label status, Date fromDate,
+			Date toDate) {
+		// Get CA and area
+		ConservationArea ca = SmartDB.getCurrentConservationArea();
+		List<Area> areas = getAreaList(ca);
+
+		for (Area area : areas) {
+
+			Geometry env = area.getGeometry().getEnvelope();
+
+			Envelope x = env.getEnvelopeInternal();
+
+			String statusText = FireDAO.getFireCountByDate(x.getMinX(),
+					x.getMinY(), x.getMaxX(), x.getMaxY(), fromDate, toDate);
+
+			status.setText(statusText);
+		}
 	}
 
 }

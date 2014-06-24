@@ -1,8 +1,8 @@
 package it.jrc.estation;
 
-import it.jrc.estation.domain.ActiveFire;
 
 import org.hibernate.Session;
+import org.wcs.smart.fire.model.ActiveFire;
 import org.wcs.smart.hibernate.SmartHibernateManager;
 
 public class FireHibernateManager extends SmartHibernateManager {

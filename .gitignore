@@ -1,7 +1,9 @@
 target/*
 bin/*
+lib/*
 hibernate.properties
 runtime.properties
 .project
 .classpath
 .settings/*
+derby.log

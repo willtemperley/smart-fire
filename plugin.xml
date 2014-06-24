@@ -7,15 +7,15 @@
             allPopups="false"
             locationURI="menu:org.eclipse.ui.main.menu?after=org.wcs.smart.intelligence.menu">
          <menu
-               id="it.jrc.estation.menu"
+               id="it.jrc.smart.fire.menu"
                label="Fires">
             <command
-                  commandId="it.jrc.estation.commands.OpenFireManager"
+                  commandId="it.jrc.smart.fire.commands.OpenFireManager"
                   label="Open fire manager"
                   style="push">
             </command>
             <command
-                  commandId="it.jrc.estation.ShowFirePerspective"
+                  commandId="it.jrc.smart.fire.ShowFirePerspective"
                   label="Open fire perspective"
                   style="push">
             </command>
@@ -26,18 +26,18 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            id="it.jrc.estation.commands.OpenFireManager"
+            id="it.jrc.smart.fire.commands.OpenFireManager"
             name="Open">
       </command>
       <command
-            id="it.jrc.estation.ShowFirePerspective"
+            id="it.jrc.smart.fire.ShowFirePerspective"
             name="Open perspective">
       </command>
   </extension>
    <extension
          point="org.eclipse.ui.commandImages">
       <image
-            commandId="it.jrc.estation.ShowFirePerspective"
+            commandId="it.jrc.smart.fire.ShowFirePerspective"
             icon="images/etool16/delete.png">
       </image>
    </extension>
@@ -45,18 +45,18 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="it.jrc.estation.FirePerspective"
+            class="it.jrc.smart.fire.FirePerspective"
             icon="images/etool16/delete.png"
-            id="it.jrc.estation.FirePerspective"
+            id="it.jrc.smart.fire.FirePerspective"
             name="%perspective.name">
       </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="it.jrc.estation.FireListView"
+            class="it.jrc.smart.fire.FireListView"
             icon="images/etool16/delete.png"
-            id="it.jrc.estation.FireListView"
+            id="it.jrc.smart.fire.FireListView"
             name="%view.name"
             restorable="true">
       </view>
@@ -65,8 +65,8 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.jrc.estation.handlers.ActiveFirePluginHandler"
-            commandId="it.jrc.estation.commands.OpenFireManager">
+            class="it.jrc.smart.fire.handlers.ActiveFirePluginHandler"
+            commandId="it.jrc.smart.fire.commands.OpenFireManager">
          <activeWhen>
             <test
                   forcePluginActivation="true"
@@ -75,8 +75,8 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.jrc.estation.handlers.OpenFirePerspectiveHandler"
-            commandId="it.jrc.estation.ShowFirePerspective">
+            class="it.jrc.smart.fire.handlers.OpenFirePerspectiveHandler"
+            commandId="it.jrc.smart.fire.ShowFirePerspective">
          <activeWhen>
             <test
                   forcePluginActivation="true"
@@ -90,7 +90,7 @@
    <!-- Register the class in hibernate -->
    <!-- This uses the RCP plugin mechanism to advertise hibernate mappings -->
    <extension point="org.wcs.smart.hibernate.mapping">
-      <class class="org.wcs.smart.fire.model.ActiveFire"/>
+      <class class="it.jrc.smart.fire.model.ActiveFire"/>
    </extension>
 
 </plugin>

@@ -38,7 +38,7 @@
          point="org.eclipse.ui.commandImages">
       <image
             commandId="it.jrc.smart.fire.ShowFirePerspective"
-            icon="images/etool16/delete.png">
+            icon="images/fire/fire_icon.png">
       </image>
    </extension>
 

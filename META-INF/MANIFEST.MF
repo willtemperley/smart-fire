@@ -3,11 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Estation
 Bundle-SymbolicName: it.jrc.smart.fire;singleton:=true
 Bundle-Version: 0.0.1
-Bundle-Activator: it.jrc.smart.fire.Activator
+Bundle-Activator: it.jrc.smart.fire.FirePlugin
 Require-Bundle: org.wcs.smart.intelligence;bundle-version="3.0.0",
- org.wcs.smart;bundle-version="3.0.1"
+ org.wcs.smart;bundle-version="3.0.1",
+ org.junit
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: it.jrc.estation
+Bundle-Vendor: it.jrc.smart.fire
 Export-Package: it.jrc.smart.fire.model
+Import-Package: net.refractions.udig.style.sld
 

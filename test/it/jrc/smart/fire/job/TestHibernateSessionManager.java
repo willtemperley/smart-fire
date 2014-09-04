@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package it.jrc.smart.fire;
+package it.jrc.smart.fire.job;
 
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -34,6 +34,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.wcs.smart.ca.Agency;
+import org.wcs.smart.ca.Area;
 import org.wcs.smart.ca.ConservationArea;
 import org.wcs.smart.ca.Employee;
 import org.wcs.smart.ca.Label;
@@ -48,12 +49,9 @@ import org.wcs.smart.ca.datamodel.CategoryAttribute;
 import org.wcs.smart.ca.datamodel.DmObject;
 
 /**
- * TODO Purpose of 
  * 
- * @author Emily
- * @since 1.0.0
  */
-public class Hibernate {
+public class TestHibernateSessionManager {
 
 	private static SessionFactory sessionFactory = null;
 	
@@ -71,6 +69,7 @@ public class Hibernate {
 			CacheConfiguration c;
 			
 			config.addAnnotatedClass(ConservationArea.class);
+			config.addAnnotatedClass(Area.class);
 			config.addAnnotatedClass(Language.class);
 			config.addAnnotatedClass(Employee.class);
 			config.addAnnotatedClass(Rank.class);
@@ -84,6 +83,14 @@ public class Hibernate {
 			config.addAnnotatedClass(AttributeListItem.class);
 			config.addAnnotatedClass(AttributeTreeNode.class);
 			
+			config.addAnnotatedClass(org.wcs.smart.ca.Projection.class);
+			
+			config.addAnnotatedClass(org.wcs.smart.observation.model.WaypointObservation.class);
+			config.addAnnotatedClass(org.wcs.smart.observation.model.Waypoint.class);
+			config.addAnnotatedClass(org.wcs.smart.observation.model.WaypointObservationAttribute.class);
+			config.addAnnotatedClass(org.wcs.smart.observation.model.ObservationAttachment.class);
+			config.addAnnotatedClass(org.wcs.smart.observation.model.WaypointAttachment.class);
+			config.addAnnotatedClass(org.wcs.smart.observation.model.ObservationOptions.class);
 			
 			
 			sessionFactory = config.buildSessionFactory();

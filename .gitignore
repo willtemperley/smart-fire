@@ -7,3 +7,4 @@ runtime.properties
 .classpath
 .settings/*
 derby.log
+data/*

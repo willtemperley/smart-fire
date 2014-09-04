@@ -10,32 +10,23 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.part.ViewPart;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.wcs.smart.hibernate.SmartHibernateManager;
 
 /**
- * A viewer where users can view all intelligence items.
  * 
- * @author elitvin
- * @since 1.0.0
  */
 public class FireListView extends ViewPart  {
 
-	public static final String ID = "it.jrc.smart.fire.FireListView"; //$NON-NLS-1$
+	public static final String ID = "it.jrc.smart.fire.job.FireListView"; //$NON-NLS-1$
 
 	private TableViewer intelligenceListViewer;
 	private Job updateJob = new UpdateIntelligenceListIdJob();
@@ -64,6 +55,7 @@ public class FireListView extends ViewPart  {
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite main = new Composite(parent, SWT.NONE);
+
 		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		GridLayout layout = new GridLayout(1, false);
@@ -73,29 +65,24 @@ public class FireListView extends ViewPart  {
 		layout.marginHeight = 0;
 		main.setLayout(layout);
 		
-		intelligenceListViewer = new TableViewer(main, SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
-		Table list = intelligenceListViewer.getTable();
-		list.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		list.setBounds(0, 0, 88, 68);
+		final DateTime fromDatePicker = new DateTime(main, SWT.BORDER
+				| SWT.DATE | SWT.DROP_DOWN);
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.LEFT;
+		gridData.verticalAlignment = SWT.TOP;
+		gridData.grabExcessHorizontalSpace = false;
+		fromDatePicker.setLayoutData(gridData);
 		
-		intelligenceListViewer.setContentProvider(ArrayContentProvider.getInstance());
-		intelligenceListViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		updateContent();
-
-		
-		intelligenceListViewer.addDoubleClickListener(new IDoubleClickListener() {
-			
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-			}
-		});
-		
-		/* add right click context menu */
-		MenuManager menuManager = new MenuManager();
-		Menu menu = menuManager.createContextMenu(intelligenceListViewer.getControl());
-		intelligenceListViewer.getControl().setMenu(menu);
-		getSite().registerContextMenu(menuManager,  intelligenceListViewer);
-		getSite().setSelectionProvider(intelligenceListViewer);
+//        final RangeSlider hRangeSlider = new RangeSlider(parent, SWT.HORIZONTAL);
+//        final GridData gd = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 2);
+//        gd.widthHint = 250;
+//        hRangeSlider.setLayoutData(gd);
+//        hRangeSlider.setMinimum(100);
+//        hRangeSlider.setMaximum(1000);
+//        hRangeSlider.setLowerValue(200);
+//        hRangeSlider.setUpperValue(800);
+//        hRangeSlider.setIncrement(100);
+//        hRangeSlider.setPageIncrement(200);
 	}
 
 	/**
@@ -106,12 +93,9 @@ public class FireListView extends ViewPart  {
 		updateJob.schedule();		
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-	 */
 	@Override
 	public void setFocus() {
-		intelligenceListViewer.getControl().setFocus();
+//		intelligenceListViewer.getControl().setFocus();
 
 	}
 

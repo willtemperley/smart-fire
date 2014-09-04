@@ -4,9 +4,9 @@ Bundle-Name: Estation
 Bundle-SymbolicName: it.jrc.smart.fire;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: it.jrc.smart.fire.FirePlugin
-Require-Bundle: org.wcs.smart.intelligence;bundle-version="3.0.0",
- org.wcs.smart;bundle-version="3.0.1",
- org.junit
+Require-Bundle: org.wcs.smart;bundle-version="3.0.1",
+ org.junit,
+ org.wcs.smart.observation;bundle-version="3.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: it.jrc.smart.fire

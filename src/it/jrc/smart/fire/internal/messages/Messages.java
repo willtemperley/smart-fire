@@ -24,7 +24,7 @@ package it.jrc.smart.fire.internal.messages;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-    private static final String BUNDLE_NAME = "it.jrc.smart.fire.internal.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "it.jrc.smart.fire.job.internal.messages"; //$NON-NLS-1$
 
 	public static String FireServiceDescription;
 

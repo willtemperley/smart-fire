@@ -26,23 +26,18 @@ import it.jrc.smart.fire.SmartAccess;
 import it.jrc.smart.fire.model.ActiveFire;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Random;
 
 import org.geotools.data.FeatureReader;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.hibernate.Session;
-import org.jaitools.jiffle.parser.RuntimeSourceGenerator.foreachLoop_return;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.wcs.smart.ca.Area;
 import org.wcs.smart.ca.Area.AreaType;
 import org.wcs.smart.hibernate.SmartHibernateManager;
-import org.wcs.smart.intelligence.model.Intelligence;
-import org.wcs.smart.intelligence.model.IntelligencePoint;
-import org.wcs.smart.util.SmartUtils;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -71,7 +66,7 @@ public class FireFeatureReader implements FeatureReader<SimpleFeatureType, Simpl
 		
 		System.out.println("CREATING FIREFEATUREREADER");
 
-		fires = FireDAO.getRecentFires(env);
+		fires = FireDAO.getRecentFires(env, new Date());
 		
 	}
 	

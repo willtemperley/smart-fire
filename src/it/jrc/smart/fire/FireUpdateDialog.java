@@ -1,5 +1,6 @@
 package it.jrc.smart.fire;
 
+import it.jrc.smart.fire.job.DeleteFireJob;
 import it.jrc.smart.fire.job.UpdateFireJob;
 import it.jrc.smart.fire.model.ActiveFire;
 
@@ -79,6 +80,21 @@ public class FireUpdateDialog extends TrayDialog {
 		gridData.verticalAlignment = SWT.TOP;
 		gridData.grabExcessHorizontalSpace = true;
 		status.setLayoutData(gridData);
+		
+		Button deleteButton = new Button(container, SWT.PUSH);
+		deleteButton.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 1,
+				1));
+		deleteButton.setText("Delete fires");
+		deleteButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+				DeleteFireJob dfj = new DeleteFireJob(session);
+				dfj.schedule();
+
+			}
+		});
+
 
 		Button button = new Button(container, SWT.PUSH);
 		button.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 1,

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.derby.tools.sysinfo;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -76,7 +77,7 @@ public class UpdateFireJob extends Job {
 		
 		if (mostRecent == null) {
 			try {
-				mostRecent = FireDAO.df.parse("2000-01-01 00:00:00");
+				mostRecent = FireDAO.df.parse("2014-01-01 00:00:00");
 			} catch (ParseException e) {
 				e.printStackTrace();
 				monitor.setCanceled(true);
@@ -86,6 +87,8 @@ public class UpdateFireJob extends Job {
 
 		Area area = caDao.getArea(session, AreaType.BA);
 		List<ActiveFire> fires = FireDAO.getRecentFires(area.getGeometry().getEnvelopeInternal(), mostRecent);
+		
+		System.out.println("N RETREIVED: " + fires.size());
 
 		monitor.worked(50);
 
@@ -97,14 +100,14 @@ public class UpdateFireJob extends Job {
 		List<Category> cats = dm.getCategories();
 		for (Category category : cats) {
 			List<CategoryAttribute> atts = category.getAttributes();
-			System.out.println(category.getName());
-			if (category.getName().equals("ActiveFire")) {
+			System.out.println(category.getDefaultName());
+			if (category.getDefaultName().equals("ActiveFire")) {
 				activeFireCat = category;
 			}
 			for (CategoryAttribute categoryAttribute : atts) {
 				System.out.print("--->");
 				Attribute attribute = categoryAttribute.getAttribute();
-				System.out.println(attribute.getName());
+				System.out.println(attribute.getDefaultName());
 			}
 		}
 

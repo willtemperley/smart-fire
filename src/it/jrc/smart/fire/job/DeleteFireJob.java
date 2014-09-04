@@ -21,7 +21,8 @@ public class DeleteFireJob extends Job{
 	protected IStatus run(IProgressMonitor monitor) {
 		Transaction t = session.beginTransaction();
 		try {
-			session.createQuery("delete from Waypoint where source = 'PATROL'").executeUpdate();
+//			session.createQuery("delete from Waypoint where source = 'PATROL'").executeUpdate();
+			session.createQuery("delete from Waypoint").executeUpdate();
 			t.commit();
 		} catch (Exception e) {
 			t.rollback();

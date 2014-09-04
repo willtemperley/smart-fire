@@ -26,7 +26,7 @@ import org.wcs.smart.hibernate.SmartHibernateManager;
  */
 public class FireListView extends ViewPart  {
 
-	public static final String ID = "it.jrc.smart.fire.job.FireListView"; //$NON-NLS-1$
+	public static final String ID = "it.jrc.smart.fire.FireListView"; //$NON-NLS-1$
 
 	private TableViewer intelligenceListViewer;
 	private Job updateJob = new UpdateIntelligenceListIdJob();

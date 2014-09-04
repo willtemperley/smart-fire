@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.jaitools.jiffle.parser.RuntimeSourceGenerator.foreachLoop_return;
 import org.junit.Test;
 import org.wcs.smart.ca.ConservationArea;
 import org.wcs.smart.observation.model.Waypoint;
@@ -21,10 +20,9 @@ public class UpdateFireTest {
 	public ConservationArea getConservationArea() {
 		
 		Query q = session.createQuery("from ConservationArea");
-		List l = q.list();
-		for (Object object : l) {
-
-			ConservationArea ca = (ConservationArea) object;
+		@SuppressWarnings("unchecked")
+		List<ConservationArea> l = q.list();
+		for (ConservationArea ca : l) {
 			System.out.println(ca.getName());
 			if (ca.getName().equals("W National Park of Niger")) {
 				return ca;
@@ -50,13 +48,13 @@ public class UpdateFireTest {
 		List<Waypoint> waypoints = q.list();
 		
 		Map<String, Integer> m = new HashMap<String, Integer>();
-		m.put(MODIS_5_0, 0);
-		m.put(MODIS_5_1, 0);
 		
 		for (Waypoint waypoint : waypoints) {
-			if (waypoint.getSource().equals(MODIS_5_0)) {
-				m.put(MODIS_5_0, m.get(MODIS_5_0) + 1);
-				m.put(MODIS_5_1, m.get(MODIS_5_1) + 1);
+			String sourceId = waypoint.getSourceId();
+			if(m.get(sourceId) == null) {
+				m.put(sourceId, 1);
+			} else {
+				m.put(sourceId, m.get(sourceId) + 1);
 			}
 		}
 

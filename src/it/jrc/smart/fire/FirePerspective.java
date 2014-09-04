@@ -36,7 +36,7 @@ import org.wcs.smart.ui.map.MapView;
  */
 public class FirePerspective implements IPerspectiveFactory {
 
-	public static final String ID = "it.jrc.smart.fire.job.FirePerspective"; //$NON-NLS-1$
+	public static final String ID = "it.jrc.smart.fire.FirePerspective"; //$NON-NLS-1$
 	
 	@Override
 	public void createInitialLayout(IPageLayout layout) {

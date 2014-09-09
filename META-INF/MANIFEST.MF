@@ -1,15 +1,20 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Estation
+Bundle-Name: Smart-Fires
 Bundle-SymbolicName: it.jrc.smart.fire;singleton:=true
-Bundle-Version: 0.0.1
+Bundle-Version: 0.0.3
 Bundle-Activator: it.jrc.smart.fire.FirePlugin
 Require-Bundle: org.wcs.smart;bundle-version="3.0.1",
- org.junit,
  org.wcs.smart.observation;bundle-version="3.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: it.jrc.smart.fire
-Export-Package: it.jrc.smart.fire.model
-Import-Package: net.refractions.udig.style.sld
+Export-Package: com.google.gson,
+ com.google.gson.reflect,
+ it.jrc.smart.fire.model
+Import-Package: com.google.gson,
+ com.google.gson.reflect,
+ net.refractions.udig.style.sld
+Bundle-ClassPath: .,
+ lib/gson-2.2.4.jar
 

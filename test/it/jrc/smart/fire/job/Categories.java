@@ -2,13 +2,10 @@ package it.jrc.smart.fire.job;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.junit.Test;
-import org.wcs.smart.hibernate.SmartHibernateManager;
 
 public class Categories {
 	
-	@Test
+//	@Test
 	public void testFires() {
 		
 		Session session = TestHibernateSessionManager.openSession();

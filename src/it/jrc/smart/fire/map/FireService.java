@@ -23,8 +23,8 @@ public class FireService extends IService {
 
 	private FireDataSource fireDataSource;
 
-	public FireService() {
-		this.fireDataSource = new FireDataSource();
+	public FireService(FireDataSource fireDataSource) {
+		this.fireDataSource = fireDataSource;
 	}
 
 	@Override

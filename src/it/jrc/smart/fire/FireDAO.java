@@ -10,9 +10,7 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,11 +19,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Session;
-import org.jaitools.jiffle.parser.RuntimeSourceGenerator.foreachLoop_return;
-import org.wcs.smart.ca.Area;
-import org.wcs.smart.ca.Area.AreaType;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -33,7 +26,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
 
 public class FireDAO {
 
@@ -41,62 +33,62 @@ public class FireDAO {
 
 	public static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	public static Collection<ActiveFire> getFiresByDate(double minx,
-			double miny, double maxx, double maxy, Date fromDate, Date toDate) {
-		String url;
+//	public static Collection<ActiveFire> getFiresByDate(double minx,
+//			double miny, double maxx, double maxy, Date fromDate, Date toDate) {
+//		String url;
+//
+//		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//
+//		url = String
+//				.format("http://dopa-services.jrc.ec.europa.eu/services/estation/get_fires_by_date?minx=%s&miny=%s&maxx=%s&maxy=%s&fromdate=%s&todate=%s&srid=%s",
+//						minx, miny, maxx, maxy, df.format(fromDate),
+//						df.format(toDate), 4326);
+//
+//		String readJson = readJsonFromUrl(url);
+//
+//		JsonParser parser = new JsonParser();
+//		JsonObject obj = (JsonObject) parser.parse(readJson);
+//		JsonArray arr = obj.get("records").getAsJsonArray();
+//
+//		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+//				.create();
+//
+//		Type collectionType = new TypeToken<Collection<ActiveFire>>() {
+//		}.getType();
+//
+//		Collection<ActiveFire> x = gson.fromJson(arr, collectionType);
+//
+//		System.out.println("Fires retrieved from url: " + url);
+//
+//		return x;
+//	}
 
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-		url = String
-				.format("http://dopa-services.jrc.ec.europa.eu/services/estation/get_fires_by_date?minx=%s&miny=%s&maxx=%s&maxy=%s&fromdate=%s&todate=%s&srid=%s",
-						minx, miny, maxx, maxy, df.format(fromDate),
-						df.format(toDate), 4326);
-
-		String readJson = readJsonFromUrl(url);
-
-		JsonParser parser = new JsonParser();
-		JsonObject obj = (JsonObject) parser.parse(readJson);
-		JsonArray arr = obj.get("records").getAsJsonArray();
-
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-				.create();
-
-		Type collectionType = new TypeToken<Collection<ActiveFire>>() {
-		}.getType();
-
-		Collection<ActiveFire> x = gson.fromJson(arr, collectionType);
-
-		System.out.println("Fires retrieved from url: " + url);
-
-		return x;
-	}
-
-	public static String getFireCountByDate(double minx, double miny,
-			double maxx, double maxy, Date fromDate, Date toDate) {
-		String url;
-
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-		url = String
-				.format("http://dopa-services.jrc.ec.europa.eu/services/estation/get_fire_count_by_date?minx=%s&miny=%s&maxx=%s&maxy=%s&fromdate=%s&todate=%s&srid=%s",
-						minx, miny, maxx, maxy, df.format(fromDate),
-						df.format(toDate), 4326);
-
-		String readJson = readJsonFromUrl(url);
-
-		JsonParser parser = new JsonParser();
-		JsonObject obj = (JsonObject) parser.parse(readJson);
-		JsonArray arr = obj.get("records").getAsJsonArray();
-
-		JsonObject x = (JsonObject) arr.get(0);
-		JsonObject y = (JsonObject) arr.get(1);
-		String fireCount = x.get("count").getAsString();
-		String dateCount = y.get("count").getAsString();
-
-		return fireCount + " fires over " + dateCount + " days between "
-				+ df.format(fromDate) + " and " + df.format(toDate);
-
-	}
+//	public static String getFireCountByDate(double minx, double miny,
+//			double maxx, double maxy, Date fromDate, Date toDate) {
+//		String url;
+//
+//		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//
+//		url = String
+//				.format("http://dopa-services.jrc.ec.europa.eu/services/estation/get_fire_count_by_date?minx=%s&miny=%s&maxx=%s&maxy=%s&fromdate=%s&todate=%s&srid=%s",
+//						minx, miny, maxx, maxy, df.format(fromDate),
+//						df.format(toDate), 4326);
+//
+//		String readJson = readJsonFromUrl(url);
+//
+//		JsonParser parser = new JsonParser();
+//		JsonObject obj = (JsonObject) parser.parse(readJson);
+//		JsonArray arr = obj.get("records").getAsJsonArray();
+//
+//		JsonObject x = (JsonObject) arr.get(0);
+//		JsonObject y = (JsonObject) arr.get(1);
+//		String fireCount = x.get("count").getAsString();
+//		String dateCount = y.get("count").getAsString();
+//
+//		return fireCount + " fires over " + dateCount + " days between "
+//				+ df.format(fromDate) + " and " + df.format(toDate);
+//
+//	}
 
 	public static List<Date> getDatesBetweenTheseDates(Date fromDate,
 			Date toDate) {

@@ -4,11 +4,14 @@ import it.jrc.smart.fire.job.DeleteFireJob;
 import it.jrc.smart.fire.job.UpdateFireJob;
 import it.jrc.smart.fire.model.ActiveFire;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -18,23 +21,33 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.wcs.smart.ca.Area;
-import org.wcs.smart.ca.Area.AreaType;
 import org.wcs.smart.ca.ConservationArea;
+import org.wcs.smart.ca.datamodel.Attribute;
+import org.wcs.smart.ca.datamodel.Attribute.AttributeType;
+import org.wcs.smart.ca.datamodel.Category;
+import org.wcs.smart.ca.datamodel.CategoryAttribute;
 import org.wcs.smart.hibernate.SmartDB;
 import org.wcs.smart.hibernate.SmartHibernateManager;
 import org.wcs.smart.observation.model.Waypoint;
 
 public class FireUpdateDialog extends TrayDialog {
 
+	private static final ConservationArea CURRENT_CONSERVATION_AREA = SmartDB.getCurrentConservationArea();
+
 	private static final String SELECTION_DIALOG = "Fire data manager";
 
 	Session session = SmartHibernateManager.openSession();
+
+	private Date mostRecent;
+
+	private Label status;
+
+	private Button button;
 
 	public FireUpdateDialog(Shell parentShell) {
 		super(parentShell);
@@ -47,43 +60,110 @@ public class FireUpdateDialog extends TrayDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
+
 		Composite container = (Composite) super.createDialogArea(parent);
+		status = new Label(container, SWT.NONE);
 
-		Label fromDateLabel = new Label(container, SWT.NONE);
-		fromDateLabel.setText("From date:");
+		ensureDataModel(CURRENT_CONSERVATION_AREA);
 
-		final DateTime fromDatePicker = new DateTime(container, SWT.BORDER
-				| SWT.DATE | SWT.DROP_DOWN);
+		status.setText("Determining fire archive status ...");
+
+		determineLatestFireDate();
+
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.verticalAlignment = SWT.TOP;
 		gridData.grabExcessHorizontalSpace = true;
-		fromDatePicker.setLayoutData(gridData);
-
-		Label toDateLabel = new Label(container, SWT.NONE);
-		toDateLabel.setText("To date:");
-
-		final DateTime toDatePicker = new DateTime(container, SWT.BORDER
-				| SWT.DATE | SWT.DROP_DOWN);
-		toDatePicker.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER,
-				false, false));
-
-		gridData = new GridData();
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.verticalAlignment = SWT.TOP;
-		gridData.grabExcessHorizontalSpace = true;
-		toDatePicker.setLayoutData(gridData);
-
-		final Label status = new Label(container, SWT.NONE);
-		gridData = new GridData();
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.verticalAlignment = SWT.TOP;
-		gridData.grabExcessHorizontalSpace = true;
 		status.setLayoutData(gridData);
-		
-		Button deleteButton = new Button(container, SWT.PUSH);
-		deleteButton.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 1,
+
+		addDeleteFireButton(container);
+
+		button = new Button(container, SWT.PUSH);
+		button.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 1,
 				1));
+
+		button.setText("Update");
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+				doFireUpdate();
+			}
+		});
+
+		return container;
+	}
+
+	private void ensureDataModel(ConservationArea ca) {
+		
+		Query q = session.createQuery("from Category where conservationArea.uuid = :caUuid and keyId = :keyId");
+		q.setParameter("caUuid", ca.getUuid());
+		q.setParameter("keyId", "activefire");
+		Category fireCat = (Category) q.uniqueResult();
+		if (fireCat != null) {
+			System.out.println("have fireCat " + fireCat);
+			return;
+		}
+
+		session.getTransaction().begin();
+
+		Category category = new Category();
+		category.updateName(ca.getDefaultLanguage(), "ActiveFire");
+		category.setKeyId("activefire");
+		category.setConservationArea(ca);
+		category.setHkey("");
+		category.setIsActive(true);
+
+		session.save(category);
+		
+		String[] attNames = new String[]{"frp", "confidence"};
+		List<CategoryAttribute> catts = new ArrayList<CategoryAttribute>();
+		for (int i = 0; i < attNames.length; i++) {
+			
+			Attribute att = new Attribute();
+			att.setType(AttributeType.NUMERIC);
+			att.updateName(ca.getDefaultLanguage(), attNames[i]);
+			att.setKeyId("activefire." + attNames[i]);
+			att.setConservationArea(ca);
+			session.save(att);
+
+			CategoryAttribute catt = new CategoryAttribute(category, att);
+			catts.add(catt);
+			session.save(catt);
+
+		}
+
+		category.setAttributes(catts);
+		
+		session.getTransaction().commit();
+		System.out.println("Saved DM");
+	}
+
+	private void determineLatestFireDate() {
+		new Thread(new Runnable() {
+			public void run() {
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						Query q = session
+								.createQuery("select max(dateTime) from Waypoint where source = 'MODIS-5.0' or source = 'MODIS-5.1'");
+						mostRecent = (Date) q.uniqueResult();
+						if (mostRecent == null) {
+							status.setText("No active fire information yet available.");
+						} else {
+							status.setText("Date of latest active fire information available: "
+									+ mostRecent.toString());
+						}
+
+					}
+				});
+			}
+		}).start();
+	}
+
+	private void addDeleteFireButton(Composite container) {
+		Button deleteButton = new Button(container, SWT.PUSH);
+		deleteButton.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true,
+				true, 1, 1));
 		deleteButton.setText("Delete fires");
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -94,41 +174,40 @@ public class FireUpdateDialog extends TrayDialog {
 
 			}
 		});
+	}
 
+	private void doFireUpdate() {
 
-		Button button = new Button(container, SWT.PUSH);
-		button.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 1,
-				1));
+		UpdateFireJob ufj = new UpdateFireJob(
+				CURRENT_CONSERVATION_AREA, mostRecent, session) {
 
-		button.setText("Get fires");
-		button.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			protected IStatus run(IProgressMonitor monitor) {
+				final Integer nFires = doUpdate(monitor);
 
-				UpdateFireJob ufj = new UpdateFireJob(SmartDB.getCurrentConservationArea(), session);
-				ufj.schedule();
+				/*
+				 * A new thread, to update the UI
+				 */
+				new Thread(new Runnable() {
+					public void run() {
+						Display.getDefault().asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								status.setText("Fire archive updated. " + nFires + " active fire pixels imported.");
+							}
+						});
+					}
+				}).start();
 
+				return Status.OK_STATUS;
 			}
-		});
 
-		return container;
-	}
-	
-	public void getLastDate() {
-		Query q = session.createQuery("select max(dateTime) from Waypoint where source = 'MODIS'");
-		Object x = q.uniqueResult();
-		System.out.println(x);
+		};
+		ufj.schedule();
+		
 	}
 
-	// Why DateTime can't do this I don't know!
-	private static Date getDateFromDateTime(DateTime dateTimeDOB) {
 
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DAY_OF_MONTH, dateTimeDOB.getDay());
-		cal.set(Calendar.MONTH, dateTimeDOB.getMonth());
-		cal.set(Calendar.YEAR, dateTimeDOB.getYear());
-		return cal.getTime();
-	}
 
 	private void saveFires(Session session, ConservationArea ca,
 			Collection<ActiveFire> someFires, Date fromDate, Date toDate) {

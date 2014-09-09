@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.junit.Test;
+import org.jaitools.jiffle.parser.RuntimeSourceGenerator.foreachLoop_return;
 import org.wcs.smart.ca.ConservationArea;
 import org.wcs.smart.observation.model.Waypoint;
 
@@ -31,17 +31,27 @@ public class UpdateFireTest {
 		}
 		return null;
 	}
+	
+	
+//	@Test
+	public void getRecentFiresFromDB() {
+		Query q = session.createQuery("from Waypoint where source = 'MODIS-5.0' or source = 'MODIS-5.1' order by datetime desc");
+		List l = q.list();
+		for (Object object : l) {
+			System.out.println(object);
+		}
+	}
 
-	@Test
+//	@Test
 	public void updateFires() {
 
-		UpdateFireJob dfj = new UpdateFireJob(getConservationArea(), session);
-		
-		dfj.doUpdate(new MockProgressMonitor());
+//		UpdateFireJob dfj = new UpdateFireJob(getConservationArea(), session);
+//		
+//		dfj.doUpdate(new MockProgressMonitor());
 
 	}
 	
-	@Test
+//	@Test
 	public void getStats() {
 		
 		Query q = session.createQuery("from Waypoint");

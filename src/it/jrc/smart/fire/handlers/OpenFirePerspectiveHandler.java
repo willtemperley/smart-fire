@@ -31,17 +31,6 @@ public class OpenFirePerspectiveHandler extends AbstractHandler {
 					.showPerspective(FirePerspective.ID,
 							HandlerUtil.getActiveWorkbenchWindow(event));
 
-			FireService s = new FireService();
-			List<IGeoResource> layers;
-			try {
-				layers = (List<IGeoResource>) s.resources(null);
-				AddLayersCommand command = new AddLayersCommand(layers, 0);
-				SmartAccess.getMapView().getMap().sendCommandASync(command);
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
 		} catch (WorkbenchException e) {
 			// FirePlugin.displayLog(Messages.ShowIntelligencePersepctiveHandler_Error,

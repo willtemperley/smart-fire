@@ -1,10 +1,9 @@
 package it.jrc.smart.fire.map;
 
-import it.jrc.smart.fire.FireDAO;
-import it.jrc.smart.fire.SmartAccess;
 import it.jrc.smart.fire.internal.messages.Messages;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.geotools.data.AbstractDataStore;
@@ -14,8 +13,6 @@ import org.geotools.feature.SchemaException;
 import org.hibernate.Session;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import org.wcs.smart.ca.Area.AreaType;
-import org.wcs.smart.hibernate.SmartHibernateManager;
 
 /**
  *
@@ -25,10 +22,18 @@ public class FireDataSource extends AbstractDataStore{
 	public static final String FEATURE_TYPE = "FirePoint"; //$NON-NLS-1$
 	
 	private HashMap<String, SimpleFeatureType> schemas = new HashMap<String, SimpleFeatureType>();
-	
-	public FireDataSource(){
-		
 
+	private final Date fromDate;
+
+	private final Date toDate;
+
+	private Session session;
+	
+	public FireDataSource(Session session, Date fromDate, Date toDate){
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+
+		this.session = session;
 	}
 
 	@Override
@@ -38,7 +43,7 @@ public class FireDataSource extends AbstractDataStore{
 
 	@Override
 	protected FeatureReader<SimpleFeatureType, SimpleFeature> getFeatureReader(String typeName) throws IOException {
-		return new FireFeatureReader(getSchema(typeName));
+		return new FireFeatureReader(getSchema(typeName), session, fromDate, toDate);
 	}
 
 	@Override
@@ -58,7 +63,7 @@ public class FireDataSource extends AbstractDataStore{
 	}
 
 	private SimpleFeatureType createPointSchema() throws SchemaException{
-		String spec = "fid:String,geom:Point:srid=4326"; //$NON-NLS-1$
+		String spec = "fid:String,frp:Double,confidence:Double,geom:Point:srid=4326"; //$NON-NLS-1$
 		SimpleFeatureType type =  DataUtilities.createType("smart." + FEATURE_TYPE, spec); //$NON-NLS-1$
 		return type;
 	}

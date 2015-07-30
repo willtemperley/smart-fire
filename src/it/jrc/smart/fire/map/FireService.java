@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,12 @@ public class FireService extends IService {
 	}
 
 	public DataStore getDataStore(IProgressMonitor monitor) {
+		System.out.println("getting DS: " + fireDataSource);
 		return fireDataSource;
+	}
+
+	public void setDataSource(FireDataSource fireDataSource) {
+		this.fireDataSource = fireDataSource;
 	}
 
 }

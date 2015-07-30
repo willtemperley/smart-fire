@@ -51,26 +51,13 @@ public class FireFeatureReader implements FeatureReader<SimpleFeatureType, Simpl
 	private GeometryFactory gf = new GeometryFactory();
 	private List<WaypointObservation> fires;
 	
-	public FireFeatureReader(SimpleFeatureType type, Session session, Date fromDate, Date toDate) {
+	public FireFeatureReader(SimpleFeatureType type, List<WaypointObservation> fires){//, Session session, Date fromDate, Date toDate) {
 		this.featureType = type;
 
+		this.fires = fires;
 //		Session session = SmartHibernateManager.openSession();
-		System.out.println(fromDate);
-		System.out.println(toDate);
-
-		Query q = session.createQuery("from WaypointObservation where (waypoint.sourceId = 'MODIS-5.0' or waypoint.sourceId = 'MODIS-5.1') and waypoint.dateTime >= :t1 and waypoint.dateTime <= :t2 order by dateTime desc");
-		
-		q.setParameter("t1", fromDate);
-		q.setParameter("t2", toDate);
-
-//		.setMaxResults(100);
-		
-		fires = q.list();
-		
-		for (WaypointObservation obj : fires) {
-			System.out.print("Fire at date: ");
-			System.out.println(obj.getWaypoint().getDateTime());
-		}
+//		System.out.println(fromDate);
+//		System.out.println(toDate);
 		
 	}
 	

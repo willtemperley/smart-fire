@@ -14,11 +14,6 @@
                   label="Open fire manager"
                   style="push">
             </command>
-            <command
-                  commandId="it.jrc.smart.fire.ShowFirePerspective"
-                  label="Open fire perspective"
-                  style="push">
-            </command>
          </menu>
       </menuContribution>
    </extension>
@@ -29,54 +24,13 @@
             id="it.jrc.smart.fire.commands.OpenFireManager"
             name="Open">
       </command>
-      <command
-            id="it.jrc.smart.fire.ShowFirePerspective"
-            name="Open perspective">
-      </command>
   </extension>
-   <extension
-         point="org.eclipse.ui.commandImages">
-      <image
-            commandId="it.jrc.smart.fire.ShowFirePerspective"
-            icon="images/fire/fire_icon.png">
-      </image>
-   </extension>
-
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="it.jrc.smart.fire.FirePerspective"
-            icon="images/etool16/delete.png"
-            id="it.jrc.smart.fire.FirePerspective"
-            name="%perspective.name">
-      </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            class="it.jrc.smart.fire.FireListView"
-            icon="images/etool16/delete.png"
-            id="it.jrc.smart.fire.FireListView"
-            name="%view.name"
-            restorable="true">
-      </view>
-   </extension>
 
    <extension
          point="org.eclipse.ui.handlers">
       <handler
             class="it.jrc.smart.fire.handlers.ActiveFirePluginHandler"
             commandId="it.jrc.smart.fire.commands.OpenFireManager">
-         <activeWhen>
-            <test
-                  forcePluginActivation="true"
-                  property="org.wcs.smart.caSingle">
-            </test>
-         </activeWhen>
-      </handler>
-      <handler
-            class="it.jrc.smart.fire.handlers.OpenFirePerspectiveHandler"
-            commandId="it.jrc.smart.fire.ShowFirePerspective">
          <activeWhen>
             <test
                   forcePluginActivation="true"

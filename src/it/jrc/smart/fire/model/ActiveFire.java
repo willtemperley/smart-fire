@@ -1,35 +1,29 @@
 package it.jrc.smart.fire.model;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
-@Entity
-@Table(name = "smart.active_fire")
+/**
+ * @author willtemperley@gmail.com
+ * 
+ * 
+ */
 public class ActiveFire {
 
-	private byte[] uuid;
-
-	@Id
-	@GeneratedValue(generator="uuid")
-	@GenericGenerator(name= "uuid", strategy="uuid2")
-	public byte[] getUuid() {
-		return uuid;
-	}
-	public void setUuid(byte[] uuid) {
-		this.uuid = uuid;
-	}
+//	private byte[] uuid;
+//
+//	@Id
+//	@GeneratedValue(generator="uuid")
+//	@GenericGenerator(name= "uuid", strategy="uuid2")
+//	public byte[] getUuid() {
+//		return uuid;
+//	}
+//	public void setUuid(byte[] uuid) {
+//		this.uuid = uuid;
+//	}
     
 	private Double x;
 
-	@Column(name="x")
 	public Double getX() {
 		return x;
 	}
@@ -39,7 +33,6 @@ public class ActiveFire {
 
 	private Double y;
 
-	@Column(name="y")
 	public double getY() {
 		return y;
 	}
@@ -49,7 +42,6 @@ public class ActiveFire {
 
     private Double track;
 
-	@Column(name="track")
     public Double getTrack() {
         return track;
     }
@@ -60,7 +52,6 @@ public class ActiveFire {
 
     private Double scan;
 
-	@Column(name="scan")
     public Double getScan() {
         return scan;
     }
@@ -71,7 +62,6 @@ public class ActiveFire {
 
     private String satellite;
 
-    @Column
     public String getSatellite() {
         return satellite;
     }
@@ -82,7 +72,6 @@ public class ActiveFire {
 
     private Double version;
 
-    @Column(name="versn")
     public Double getVersion() {
         return version;
     }
@@ -93,7 +82,6 @@ public class ActiveFire {
 
     private Integer confidence;
 
-    @Column
     public Integer getConfidence() {
         return confidence;
     }
@@ -104,7 +92,6 @@ public class ActiveFire {
 
     private Long decade;
 
-    @Column
     public Long getDecade() {
         return decade;
     }
@@ -115,7 +102,6 @@ public class ActiveFire {
 
     private Date stamp;
 
-    @Column
     public Date getStamp() {
         return stamp;
     }
@@ -126,7 +112,6 @@ public class ActiveFire {
 
     private Double frp;
 
-    @Column
     public Double getFrp() {
         return frp;
     }
@@ -137,7 +122,6 @@ public class ActiveFire {
 
     private Double brightness;
 
-    @Column
     public Double getBrightness() {
         return brightness;
     }
@@ -148,7 +132,6 @@ public class ActiveFire {
 
     private Double brightT31;
 
-    @Column(name="bright_t31")
     public Double getBrightT31() {
         return brightT31;
     }

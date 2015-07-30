@@ -5,14 +5,17 @@ import it.jrc.smart.fire.internal.messages.Messages;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.geotools.data.AbstractDataStore;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.FeatureReader;
 import org.geotools.feature.SchemaException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.wcs.smart.observation.model.WaypointObservation;
 
 /**
  *
@@ -23,17 +26,17 @@ public class FireDataSource extends AbstractDataStore{
 	
 	private HashMap<String, SimpleFeatureType> schemas = new HashMap<String, SimpleFeatureType>();
 
-	private final Date fromDate;
+	private Date fromDate;
 
-	private final Date toDate;
+	private Date toDate;
 
 	private Session session;
 	
-	public FireDataSource(Session session, Date fromDate, Date toDate){
+	
+	public FireDataSource(Session session, Date fromDate, Date toDate) {
+		this.session = session;
 		this.fromDate = fromDate;
 		this.toDate = toDate;
-
-		this.session = session;
 	}
 
 	@Override
@@ -43,7 +46,20 @@ public class FireDataSource extends AbstractDataStore{
 
 	@Override
 	protected FeatureReader<SimpleFeatureType, SimpleFeature> getFeatureReader(String typeName) throws IOException {
-		return new FireFeatureReader(getSchema(typeName), session, fromDate, toDate);
+		
+		if (fromDate == null || toDate == null) {
+			throw new IOException("Datasource properly initialized.");
+		}
+		
+		//This seems to be where data can be changed.
+
+		Query q = session.createQuery("from WaypointObservation where (waypoint.sourceId = 'MODIS-5.0' or waypoint.sourceId = 'MODIS-5.1') and waypoint.dateTime >= :t1 and waypoint.dateTime <= :t2 order by dateTime desc");
+		
+		q.setParameter("t1", fromDate);
+		q.setParameter("t2", toDate);
+
+		List<WaypointObservation> fires = q.list();
+		return new FireFeatureReader(getSchema(typeName), fires);
 	}
 
 	@Override

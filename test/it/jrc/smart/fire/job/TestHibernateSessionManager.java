@@ -49,7 +49,7 @@ import org.wcs.smart.ca.datamodel.CategoryAttribute;
 import org.wcs.smart.ca.datamodel.DmObject;
 
 /**
- * 
+ * All this to make the session manager instantiable from tests
  */
 public class TestHibernateSessionManager {
 

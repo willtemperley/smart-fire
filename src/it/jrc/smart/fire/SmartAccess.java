@@ -10,7 +10,6 @@ import org.wcs.smart.ca.Area;
 import org.wcs.smart.ca.Area.AreaType;
 import org.wcs.smart.ca.ConservationArea;
 import org.wcs.smart.hibernate.SmartDB;
-import org.wcs.smart.hibernate.SmartHibernateManager;
 import org.wcs.smart.ui.map.MapView;
 
 public class SmartAccess {

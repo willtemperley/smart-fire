@@ -1,26 +1,44 @@
 package it.jrc.smart.fire.model;
 
+
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
  * @author willtemperley@gmail.com
  * 
- * 
  */
 public class ActiveFire {
+	
 
-//	private byte[] uuid;
-//
-//	@Id
-//	@GeneratedValue(generator="uuid")
-//	@GenericGenerator(name= "uuid", strategy="uuid2")
-//	public byte[] getUuid() {
-//		return uuid;
-//	}
-//	public void setUuid(byte[] uuid) {
-//		this.uuid = uuid;
-//	}
+	public static class ActiveFireModel implements ICategory {
+
+		@Override
+		public Set<String> getRequiredAttributes() {
+			HashSet<String> hashSet = new HashSet<String>();
+			hashSet.add("frp");
+			hashSet.add("confidence");
+			return hashSet;
+		}
+
+		@Override
+		public String getName() {
+			return "activefire";
+		}
+
+		@Override
+		public Set<String> getSources() {
+			HashSet<String> sources = new HashSet<String>();
+			sources.add("MODIS-5.1");
+			sources.add("MODIS-5.0");
+			return sources;
+		}
+
+	}
+
+	public static ActiveFireModel model = new ActiveFireModel();
     
 	private Double x;
 

@@ -8,7 +8,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.junit.Test;
 import org.wcs.smart.ca.ConservationArea;
 import org.wcs.smart.observation.model.Waypoint;
 
@@ -35,7 +34,7 @@ public class UpdateFireTest {
 	}
 	
 	
-	@Test
+//	@Test
 	public void getRecentFiresFromDB() {
 		Query q = session.createQuery("from Waypoint where source = 'MODIS-5.0' or source = 'MODIS-5.1' order by datetime desc");
 		List l = q.list();
@@ -44,7 +43,7 @@ public class UpdateFireTest {
 		}
 	}
 
-	@Test
+//	@Test
 	public void updateFires() {
 
 		UpdateFireJob dfj = new UpdateFireJob(getConservationArea(), null, session) {
@@ -59,7 +58,7 @@ public class UpdateFireTest {
 
 	}
 	
-	@Test
+//	@Test
 	public void getStats() {
 		
 		Query q = session.createQuery("from Waypoint");

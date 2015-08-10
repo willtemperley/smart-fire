@@ -1,7 +1,12 @@
 package it.jrc.smart.fire.model;
 
-import org.wcs.smart.ca.datamodel.Category;
 
+/**
+ * @author willtemperley@gmail.com
+ * 
+ * Just holds strings to describe the SMART data model
+ *
+ */
 public class SmartModel {
 	
 	public static String activefire = "activefire";

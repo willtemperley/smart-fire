@@ -1,4 +1,4 @@
-package it.jrc.smart.fire.model2;
+package it.jrc.smart.fire.model;
 
 import java.util.Set;
 

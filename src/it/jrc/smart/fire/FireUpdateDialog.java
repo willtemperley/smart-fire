@@ -2,9 +2,9 @@ package it.jrc.smart.fire;
 
 import it.jrc.smart.fire.job.UpdateBAJob;
 import it.jrc.smart.fire.job.UpdateFireJob;
-import it.jrc.smart.fire.model2.ActiveFireModel;
-import it.jrc.smart.fire.model2.BurnedAreaModel;
-import it.jrc.smart.fire.model2.ICategory;
+import it.jrc.smart.fire.model.ActiveFire;
+import it.jrc.smart.fire.model.BurnedArea;
+import it.jrc.smart.fire.model.ICategory;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -65,7 +65,7 @@ public class FireUpdateDialog extends TrayDialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		// no-op stops this happening
+		// no-op stops the button bar being created
 	}
 	
 	protected Button addCheckBox(Composite container) {
@@ -86,9 +86,9 @@ public class FireUpdateDialog extends TrayDialog {
 		
 
 		boolean hasDM = ensureDataModel(CURRENT_CONSERVATION_AREA,
-				new ActiveFireModel())
+				ActiveFire.model)
 				&& ensureDataModel(CURRENT_CONSERVATION_AREA,
-						new BurnedAreaModel());
+						BurnedArea.model);
 
 		if (!hasDM) {
 			status = createLabel(container);
@@ -106,8 +106,8 @@ public class FireUpdateDialog extends TrayDialog {
 		burnedAreaStatus = createLabel(container);
 		burnedAreaStatus.setText("Determining archive status ...");
 
-		determineArchiveStatus(CURRENT_CONSERVATION_AREA, new ActiveFireModel(), activeFireStatus, mostRecentAF);
-		determineArchiveStatus(CURRENT_CONSERVATION_AREA, new BurnedAreaModel(), burnedAreaStatus, mostRecentBA);
+		determineArchiveStatus(CURRENT_CONSERVATION_AREA, ActiveFire.model, activeFireStatus, mostRecentAF);
+		determineArchiveStatus(CURRENT_CONSERVATION_AREA, BurnedArea.model, burnedAreaStatus, mostRecentBA);
 
 
 		// addDeleteFireButton(container);
@@ -169,7 +169,16 @@ public class FireUpdateDialog extends TrayDialog {
 			return false;
 		}
 
-		return attNames.equals(reqAtts);
+		if (attNames.equals(reqAtts)) return true;
+		
+		for (String att: reqAtts) {
+			System.err.println("Req: " + att);
+		}
+		for (String att: attNames) {
+			System.err.println("Att: " + att);
+		}
+
+		return false;
 
 		// session.getTransaction().begin();
 		//

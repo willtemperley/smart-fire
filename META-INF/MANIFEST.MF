@@ -2,11 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Smart-Fires
 Bundle-SymbolicName: it.jrc.smart.fire;singleton:=true
-Bundle-Version: 0.8.2
+Bundle-Version: 1.0.1
 Bundle-Activator: it.jrc.smart.fire.FirePlugin
 Require-Bundle: org.wcs.smart;bundle-version="3.0.1",
- org.wcs.smart.observation;bundle-version="3.0.0",
- org.junit
+ org.wcs.smart.observation;bundle-version="3.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: it.jrc.smart.fire

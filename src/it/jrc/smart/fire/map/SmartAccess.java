@@ -1,4 +1,4 @@
-package it.jrc.smart.fire;
+package it.jrc.smart.fire.map;
 
 import java.util.List;
 

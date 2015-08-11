@@ -3,6 +3,7 @@ package it.jrc.smart.fire;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+
 public class FirePlugin implements BundleActivator {
 
 	/*

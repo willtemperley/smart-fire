@@ -1,5 +1,6 @@
 package it.jrc.smart.fire;
 
+import it.jrc.smart.fire.internal.messages.Messages;
 import it.jrc.smart.fire.job.UpdateBAJob;
 import it.jrc.smart.fire.job.UpdateFireJob;
 import it.jrc.smart.fire.model.ActiveFire;
@@ -34,14 +35,16 @@ import org.wcs.smart.ca.datamodel.CategoryAttribute;
 import org.wcs.smart.hibernate.SmartDB;
 import org.wcs.smart.hibernate.SmartHibernateManager;
 
+/**
+ * Dialog for management of the fire archive
+ * 
+ * @author willtemperley@gmail.com
+ *
+ */
 public class FireUpdateDialog extends TrayDialog {
 
-	private static final ConservationArea CURRENT_CONSERVATION_AREA = SmartDB
+	private static ConservationArea CURRENT_CONSERVATION_AREA = SmartDB
 			.getCurrentConservationArea();
-
-	private static final String SELECTION_DIALOG = "Fire data manager 0.8.1";
-
-//	Session session = SmartHibernateManager.openSession();
 
 	private final Date mostRecentAF = new Date(0);
 
@@ -92,19 +95,19 @@ public class FireUpdateDialog extends TrayDialog {
 
 		if (!hasDM) {
 			status = createLabel(container);
-			status.setText("Fire data model not configured.");
+			status.setText(Messages.FIRE_DATA_MODEL_NOT_CONFIGURED);
 			return container;
 		}
 
 		activeFire = addCheckBox(container);
-		activeFire.setText("Active Fire");
+		activeFire.setText(Messages.ACTIVE_FIRE_CHECKBOX_LABEL);
 		activeFireStatus = createLabel(container);
-		activeFireStatus.setText("Determining archive status ...");
+		activeFireStatus.setText(Messages.DETERMINING_ARCHIVE_STATUS);
 
 		burnedArea = addCheckBox(container);
-		burnedArea.setText("Burned Area");
+		burnedArea.setText(Messages.BURNED_AREA);
 		burnedAreaStatus = createLabel(container);
-		burnedAreaStatus.setText("Determining archive status ...");
+		burnedAreaStatus.setText(Messages.DETERMINING_ARCHIVE_STATUS);
 
 		determineArchiveStatus(CURRENT_CONSERVATION_AREA, ActiveFire.model, activeFireStatus, mostRecentAF);
 		determineArchiveStatus(CURRENT_CONSERVATION_AREA, BurnedArea.model, burnedAreaStatus, mostRecentBA);
@@ -116,7 +119,7 @@ public class FireUpdateDialog extends TrayDialog {
 		button.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 1,
 				1));
 
-		button.setText("Update");
+		button.setText(Messages.UPDATE_BUTTON_TEXT);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -168,17 +171,24 @@ public class FireUpdateDialog extends TrayDialog {
 		} else {
 			return false;
 		}
-
-		if (attNames.equals(reqAtts)) return true;
 		
-		for (String att: reqAtts) {
-			System.err.println("Req: " + att);
-		}
-		for (String att: attNames) {
-			System.err.println("Att: " + att);
+		if (attNames.equals(reqAtts)) return true;
+
+		for (String a: reqAtts) {
+			if (!attNames.contains(a)) {
+				return false;
+			}
 		}
 
-		return false;
+		
+//		for (String att: reqAtts) {
+//			System.err.println("Req: " + att);
+//		}
+//		for (String att: attNames) {
+//			System.err.println("Att: " + att);
+//		}
+
+		return true;
 
 		// session.getTransaction().begin();
 		//
@@ -236,10 +246,10 @@ public class FireUpdateDialog extends TrayDialog {
 						q.setParameter("ca", ca);
 						Date mostRecent = (Date) q.uniqueResult();
 						if (mostRecent == null) {
-							statusLabel.setText("No information yet available.");
+							statusLabel.setText(Messages.NO_INFORMATION_YET_AVAILABLE);
 						} else {
 							latestDate.setTime(mostRecent.getTime());
-							statusLabel.setText("Data available up to "
+							statusLabel.setText(Messages.DATA_AVAILABLE_UP_TO
 									+ mostRecent.toString());
 						}
 
@@ -329,33 +339,14 @@ public class FireUpdateDialog extends TrayDialog {
 		ufj.schedule();
 	}
 	
-	
 
-	// private void saveFires(Session session, ConservationArea ca,
-	// Collection<ActiveFire> someFires, Date fromDate, Date toDate) {
-	//
-	// session.getTransaction().begin();
-	//
-	// for (ActiveFire activeFire : someFires) {
-	// Waypoint waypoint = new Waypoint();
-	// waypoint.setDateTime(activeFire.getStamp());
-	// waypoint.setConservationArea(ca);
-	// waypoint.setX(activeFire.getX());
-	// waypoint.setY(activeFire.getY());
-	// session.saveOrUpdate(waypoint);
-	// }
-	//
-	// session.getTransaction().commit();
-	// System.out.println("Saved!");
-	//
-	// }
 
 	// overriding this method allows you to set the
 	// title of the custom dialog
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(SELECTION_DIALOG);
+		newShell.setText(Messages.FIRE_DIALOG_TITLE);
 	}
 
 	@Override

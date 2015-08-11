@@ -6,13 +6,16 @@ import org.wcs.smart.ca.Area;
 import org.wcs.smart.ca.Area.AreaType;
 import org.wcs.smart.ca.ConservationArea;
 
+/**
+ * Data access object for obtaining the conservation area boundaries
+ * 
+ * @author willtemperley@gmail.com
+ * 
+ */
 public class ConservationAreaDAO {
 
 	private ConservationArea ca;
 
-	/**
-	 * This class exists simply to make CA data access testable. 
-	 */
 	public ConservationAreaDAO(ConservationArea ca) {
 		this.ca = ca;
 	}

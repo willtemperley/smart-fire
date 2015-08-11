@@ -2,6 +2,7 @@ package it.jrc.smart.fire.job;
 
 import it.jrc.smart.fire.ConservationAreaDAO;
 import it.jrc.smart.fire.FireDAO;
+import it.jrc.smart.fire.internal.messages.Messages;
 import it.jrc.smart.fire.model.BurnedArea;
 import it.jrc.smart.fire.model.SmartModel;
 
@@ -27,7 +28,7 @@ public abstract class UpdateBAJob extends Job {
 	private Date mostRecent;
 
 	public UpdateBAJob(ConservationArea ca, Date fromDate, Session session) {
-		super("Burned area update");
+		super(Messages.BURNED_AREA_UPDATE);
 		this.ca = ca;
 		this.session = session;
 		this.mostRecent = fromDate;
@@ -36,7 +37,7 @@ public abstract class UpdateBAJob extends Job {
 	protected String doUpdate(final IProgressMonitor monitor) {
 
 		//Monitor
-		monitor.beginTask("Update burned area archive", 100);
+		monitor.beginTask(Messages.UPDATE_BURNED_AREA_ARCHIVE, 100);
 
 		ConservationAreaDAO caDao = new ConservationAreaDAO(ca);
 		
@@ -58,7 +59,7 @@ public abstract class UpdateBAJob extends Job {
 		}
 
 		if (BurnedAreaCat == null) {
-			return "Data model not configured: can't find BurnedArea category.";
+			return String.format(Messages.DATA_MODEL_NOT_CONFIGURED_CATEGORY, "BurnedArea");
 		}
 		monitor.worked(50);
 
@@ -82,7 +83,7 @@ public abstract class UpdateBAJob extends Job {
 				waypoint.setConservationArea(ca);
 				waypoint.setX(BurnedArea.getX());
 				waypoint.setY(BurnedArea.getY());
-				waypoint.setSourceId("MODIS-BA");
+				waypoint.setSourceId(Messages.MODIS_BA);
 				session.saveOrUpdate(waypoint);
 				nFires++;
 
@@ -112,7 +113,7 @@ public abstract class UpdateBAJob extends Job {
 		}
 		monitor.worked(100);
 
-		return "Fire archive updated. " + nFires + " burned pixels imported.";
+		return String.format(Messages.FIRE_ARCHIVE_UPDATED_FIRE_RECORDS_IMPORTED, nFires);
 	}
 
 }

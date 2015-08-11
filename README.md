@@ -18,6 +18,7 @@ https://github.com/willtemperley/smart-fire/blob/master/smart.fire.update-150811
 Download the file and unzip. Then in SMART, go to:
 
 File -> Install new plugins
+
 Select "Add" then "local".  Select the unzipped zip file and install.  SMART will need to be restarted.
 
 The data model must be manually configured to include two categories, one to hold active fire observations and one to hold burned area observations.  The active fire category should have two attributes named "confidence" (the probability of the fire observation being correct) and "frp" (the fire radiative power).  This is represented here in tree form, with the keys in brackets.
@@ -28,3 +29,8 @@ The data model must be manually configured to include two categories, one to hol
 |- confidence (confidence)
 + BurnedArea (burnedarea)
 ```
+
+# Usage
+
+Fire data can be updated from the fire dialog, which can be accessed from the menu at the top.  The archive of interest is chosen and the user simply clicks update to get the fire data.
+

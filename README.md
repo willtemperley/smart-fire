@@ -12,10 +12,15 @@ Historical fire information (from 2002 onwards) can also be retrieved, which can
 
 # Installation
 
-The data model must be manually configured to include two categories, one to hold active fire observations and one to hold burned area observations.  The active fire category should have two attributes named "confidence" (the probability of the fire observation being correct) and "frp" (the fire radiative power).  This is represented here in tree form, with the keys in brackets.
+The latest version can be found here as a zip file:
+https://github.com/willtemperley/smart-fire/blob/master/smart.fire.update-150811.zip
+
+Download the file and unzip. Then in SMART, go to:
 
 File -> Install new plugins
-Select "Add" then "local".  Select the unzipped zip file and install.
+Select "Add" then "local".  Select the unzipped zip file and install.  SMART will need to be restarted.
+
+The data model must be manually configured to include two categories, one to hold active fire observations and one to hold burned area observations.  The active fire category should have two attributes named "confidence" (the probability of the fire observation being correct) and "frp" (the fire radiative power).  This is represented here in tree form, with the keys in brackets.
 
 ```
 + ActiveFire (activefire)

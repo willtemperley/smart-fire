@@ -17,8 +17,9 @@ The data model must be manually configured to include two categories, one to hol
 File -> Install new plugins
 Select "Add" then "local".  Select the unzipped zip file and install.
 
+```
 + ActiveFire (activefire)
 |- frp (frp)
 |- confidence (confidence)
 + BurnedArea (burnedarea)
-
+```
